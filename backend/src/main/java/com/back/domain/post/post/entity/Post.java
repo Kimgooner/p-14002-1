@@ -19,7 +19,6 @@ import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Getter
 @NoArgsConstructor
 public class Post extends BaseEntity {
     @ManyToOne
@@ -34,6 +33,22 @@ public class Post extends BaseEntity {
         this.author = author;
         this.title = title;
         this.content = content;
+    }
+
+    public Member getAuthor() {
+        return author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public List<PostComment> getComments() {
+        return comments;
     }
 
     public void modify(String title, String content) {
@@ -51,7 +66,7 @@ public class Post extends BaseEntity {
     public Optional<PostComment> findCommentById(int id) {
         return comments
                 .stream()
-                .filter(comment -> comment.getId() == id)
+                .filter(comment -> comment.id == id)
                 .findFirst();
     }
 
@@ -63,11 +78,11 @@ public class Post extends BaseEntity {
 
     public void checkActorCanModify(Member actor) {
         if (!author.equals(actor))
-            throw new ServiceException("403-1", "%d번 글 수정권한이 없습니다.".formatted(getId()));
+            throw new ServiceException("403-1", "%d번 글 수정권한이 없습니다.".formatted(id));
     }
 
     public void checkActorCanDelete(Member actor) {
         if (!author.equals(actor))
-            throw new ServiceException("403-2", "%d번 글 삭제권한이 없습니다.".formatted(getId()));
+            throw new ServiceException("403-2", "%d번 글 삭제권한이 없습니다.".formatted(id));
     }
 }
